@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Document</title>
+</head>
+<body>
+    <div class="dashboard">
+
+    <!-- TASKS ONLY -->
+    <div class="dashboard">
+    <div class="tasks-panel">
+        <h2>Tasks</h2>
+
+        <ul class="task-list">
+            {% for task in tasks %}
+                <li class="task-item">{{ task }}</li>
+            {% else %}
+                <li class="task-item empty">No tasks yet</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
