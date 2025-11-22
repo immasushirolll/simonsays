@@ -1,0 +1,26 @@
+body {
+    background-color: #5c443c; /* match the brown background */
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    color: #3b2720; /* dark brown text */
+}
+
+.small-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.big-text {
+    font-size: 3rem;
+    font-weight: bold;
+    line-height: 1.5;
+}
