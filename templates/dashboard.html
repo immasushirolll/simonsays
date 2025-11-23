@@ -4,16 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <title>Document</title>
+    <title>Dashboard</title>
 </head>
 <body>
-    <div class="dashboard">
 
-    <!-- TASKS ONLY -->
-    <div class="dashboard">
+<div class="dashboard-container">
+    <!-- TASK PANEL (LEFT) -->
     <div class="tasks-panel">
         <h2>Tasks</h2>
-
         <ul class="task-list">
             {% for task in tasks %}
                 <li class="task-item">{{ task }}</li>
@@ -22,5 +20,45 @@
             {% endfor %}
         </ul>
     </div>
+
+    <!-- MIDDLE PANEL (Health and Reflection) -->
+    <div class="middle-panel">
+        <div class="health-box">
+            <h3>Health</h3>
+            <ul class="health-list">
+                <li><label><input type="checkbox" id="water" name="water"> Drink a glass of water</label></li>
+                <li><label><input type="checkbox" id="break" name="break"> Take a 10-minute break</label></li>
+                <li><label><input type="checkbox" id="stretch" name="stretch"> Stretch your body</label></li>
+                <li><label><input type="checkbox" id="fruit" name="fruit"> Eat a fruit</label></li>
+                <li><label><input type="checkbox" id="sleep" name="sleep"> Sleep 8 hours</label></li>
+            </ul>
+        </div>
+        <div class="reflection">
+            <h3>Simon Says, Lets Reflect</h3>
+            <input type="text" class="reflection-input" >
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL (Image, Start/Stop, Add Task) -->
+    <div class="right-panel">
+        <div class="image-container">
+            <img src="{{ url_for('static', filename='/image0.jpg-removebg-preview.png') }}" alt="Health Image" class="image">
+        </div>
+        <div class="streak-panel small">
+            <p>Streak: <span class="streak-count">{{ streak }}</span></p>
+            <p>HP: <span class="health-points">{{ health_points }}</span></p>
+        </div>
+        <div class="button-row">
+            <form method="post" action="{{ url_for('start') }}">
+                <button class="submit-button" type="submit">Start</button>
+            </form>
+            <form method="post" action="{{ url_for('stop') }}">
+                <button class="submit-button" type="submit">Stop</button>
+            </form>
+        </div>
+        <a href="{{ url_for('task_input') }}" class="dashboard-newprompt">Add New Task</a>
+    </div>
+</div>
 </body>
 </html>
+

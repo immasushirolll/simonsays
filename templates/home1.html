@@ -10,51 +10,15 @@
     <nav class="nav"><a class="nav-home" href="{{ url_for('dashboard') }}">Home</a></nav>
     
     <div class="form-container">
-        <h1 class="big-text">Hi, what are we working on today?</h1>
+        <h1 class="big-text">Simon says, what are we working on today?</h1>
         
         <form id="task-form" method="POST" action="{{ url_for('save_task') }}">
             <input class="task-input" type="text" name="task" id="task-input" placeholder="Enter your task here: " required autofocus>
         </form>
-        
-        <div class="status">
-            {% if running %}
-                <p style="margin:0; font-size:1rem;">Status: <strong>Running</strong></p>
-            {% else %}
-                <p style="margin:0; font-size:1rem;">Status: <strong>Stopped</strong></p>
-            {% endif %}
-            {% if last_elapsed is not none %}
-                <p style="margin:0; font-size:0.95rem; color:#706a65;">Last session: {{ '%.1f'|format(last_elapsed) }}s</p>
-            {% endif %}
-        </div>
-        
-        <div class="button-row">
-            <form method="post" action="{{ url_for('start') }}">
-                <button class="submit-button" type="submit">Start</button>
-            </form>
-            <form method="post" action="{{ url_for('stop') }}">
-                <button class="submit-button" type="submit">Stop</button>
-            </form>
-        </div>
     </div>
-    
-    <script>
-        // Handle Enter key to submit form
-        document.addEventListener('DOMContentLoaded', function() {
-            const taskInput = document.getElementById('task-input');
-            const taskForm = document.getElementById('task-form');
-            
-            if (taskInput && taskForm) {
-                taskInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter' || e.keyCode === 13) {
-                        e.preventDefault();
-                        // Only submit if there's a value
-                        if (taskInput.value && taskInput.value.trim() !== '') {
-                            taskForm.submit();
-                        }
-                    }
-                });
-            }
-        });
-    </script>
+    </div>
+        <img src="{{ url_for('static', filename='/image0.jpg-removebg-preview.png') }}" alt="Health Image" class="image">
+    </div>
+
 </body>
 </html>
