@@ -1,6 +1,13 @@
 from flask import Flask, request, render_template, url_for, redirect
 import time
 from datetime import date
+import asyncio
+import threading
+from script import get_ss
+from analyzer import SingletonState
+
+# Initialize objects
+singleton = SingletonState()
 
 app = Flask(__name__)
 
@@ -19,7 +26,6 @@ daily_habits = [
 ]
 completed_habits = set()
 
-
 app_state = {
     "running": False,
     "start_time": None,
@@ -32,6 +38,19 @@ last_elapsed = None
 
 tasks = []
 
+# Asynchronyous and periodic task to run in background
+async def periodic_task():
+    print("Task started")
+    while True:
+        print('Task is running...')
+        get_ss()    # dummy fcn to rep sshot logic
+        await asyncio.sleep(5) # run every 5 seconds
+
+def background_loop(loop):
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(periodic_task())
+
+
 def start_task(name):
     return None
 
@@ -41,9 +60,13 @@ def on_start():
 def on_stop():
     return None
 
+@app.route("/")
+def index():
+    return redirect(url_for("home1"))
 
 @app.route("/home1")
 def home1():
+    running = singleton.get_state() == "on"
     return render_template(
         "home1.html",
         running=app_state["running"],
@@ -59,7 +82,7 @@ def home2():
     return render_template("home2.html", name=name)
 
 
-@app.route("/simonsays/")
+@app.route("/simonsays")
 def simonsays():
     return render_template("simonsays.html")
 
@@ -67,26 +90,29 @@ def simonsays():
 @app.route("/start", methods=["POST"])
 def start():
     global running, start_time
-
+    singleton.turn_on()
+    t.start()
     if not running:
         running = True
         start_time = time.time()
-        start_task(task_name)
+        # start_task(task_name)
         on_start()
 
-    return redirect(url_for("home2.html"))
+    return redirect(url_for("home2"))
 
 
 @app.route("/stop", methods=["POST"])
 def stop():
     global running, start_time, last_elapsed
-
+    singleton.turn_off()
     if running:
         running = False
         last_elapsed = time.time() - start_time
         on_stop()
 
-    return redirect(url_for("stoppage.html"))
+    # if singleton.get_state() == "off":
+    
+    return redirect(url_for("simonsays"))
 
 
 @app.route("/taskinput")
@@ -127,4 +153,6 @@ def dashboard():
     )
 
 if __name__ == "__main__":
+    loop = asyncio.new_event_loop()
+    t = threading.Thread(target=background_loop, args=(loop,))
     app.run(debug=True)

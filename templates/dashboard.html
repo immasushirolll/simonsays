@@ -34,7 +34,7 @@
             </ul>
         </div>
         <div class="reflection">
-            <h3>Simon Says, Lets Reflect</h3>
+            <h3>Simon Says, Let's Reflect</h3>
             <input type="text" class="reflection-input" >
         </div>
     </div>
@@ -42,21 +42,21 @@
     <!-- RIGHT PANEL (Image, Start/Stop, Add Task) -->
     <div class="right-panel">
         <div class="image-container">
-            <img src="{{ url_for('static', filename='/image0.jpg-removebg-preview.png') }}" alt="Health Image" class="image">
+            <img src="{{ url_for('static', filename='simon.png') }}" alt="Health Image" class="image">
         </div>
         <div class="streak-panel small">
-            <p>Streak: <span class="streak-count">{{ streak }}</span></p>
-            <p>HP: <span class="health-points">{{ health_points }}</span></p>
+            <p style="color: #88736F;">Streak: <span class="streak-count">{{ streak }}</span></p>
+            <p style="color: #88736F;">HP: <span class="health-points">{{ health_points }}</span></p>
         </div>
         <div class="button-row">
             <form method="post" action="{{ url_for('start') }}">
-                <button class="submit-button" type="submit">Start</button>
+                <button style="color: #fffff0;" class="submit-button" type="submit">Start</button>
             </form>
             <form method="post" action="{{ url_for('stop') }}">
-                <button class="submit-button" type="submit">Stop</button>
+                <button style="color: #fffff0;" class="submit-button" type="submit">Stop</button>
             </form>
         </div>
-        <a href="{{ url_for('task_input') }}" class="dashboard-newprompt">Add New Task</a>
+        <a style="color: #fffff0;" href="{{ url_for('task_input') }}" class="dashboard-newprompt">Add New Task</a>
     </div>
 </div>
 </body>
