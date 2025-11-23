@@ -30,6 +30,11 @@ h1, h2, h3, p {
     border-radius: 10px;
 }
 
+#task-input::placeholder {
+    color: #fffff0;
+}
+
+
 .form-content {
     display: flex;
     align-items: center; 

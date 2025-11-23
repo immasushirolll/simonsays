@@ -4,11 +4,9 @@ from datetime import date
 import asyncio
 import threading
 from script import get_ss
-from analyzer import SingletonState
+from state import SingletonState
 
-# Initialize objects
-singleton = SingletonState()
-
+# Initialize variables in the server
 app = Flask(__name__)
 
 users = {
@@ -38,10 +36,14 @@ last_elapsed = None
 
 tasks = []
 
+singleton = SingletonState()
+
 # Asynchronyous and periodic task to run in background
 async def periodic_task():
-    print("Task started")
-    while True:
+    global singleton
+
+    while singleton.get_state() != 'off':
+        print("Task started")
         print('Task is running...')
         get_ss()    # dummy fcn to rep sshot logic
         await asyncio.sleep(5) # run every 5 seconds
@@ -49,7 +51,6 @@ async def periodic_task():
 def background_loop(loop):
     asyncio.set_event_loop(loop)
     loop.run_until_complete(periodic_task())
-
 
 def start_task(name):
     return None
@@ -66,7 +67,6 @@ def index():
 
 @app.route("/home1")
 def home1():
-    running = singleton.get_state() == "on"
     return render_template(
         "home1.html",
         running=app_state["running"],
@@ -74,18 +74,17 @@ def home1():
     )
 
 
-@app.route("/home2", methods=["GET", "POST"])
-def home2():
+@app.route("/goodluck", methods=["GET", "POST"])
+def goodluck():
     name = None
     if request.method == "POST":
         name = request.form.get("task")
-    return render_template("home2.html", name=name)
+    return render_template("goodluck.html", name=name)
 
 
-@app.route("/simonsays")
+@app.route("/simonsays/")
 def simonsays():
     return render_template("simonsays.html")
-
 
 @app.route("/start", methods=["POST"])
 def start():
@@ -96,22 +95,24 @@ def start():
         running = True
         start_time = time.time()
         # start_task(task_name)
-        on_start()
+        # on_start()
 
-    return redirect(url_for("home2"))
+    return redirect(url_for("goodluck"))
 
 
 @app.route("/stop", methods=["POST"])
 def stop():
     global running, start_time, last_elapsed
     singleton.turn_off()
+    # try:
+    #     loop.stop()
+    # except Exception:
+    #     print(f"Loop stopped")
     if running:
         running = False
         last_elapsed = time.time() - start_time
-        on_stop()
+        # on_stop()
 
-    # if singleton.get_state() == "off":
-    
     return redirect(url_for("simonsays"))
 
 

@@ -3,7 +3,7 @@ import time
 import asyncio
 import threading
 from script import get_ss
-from analyzer import SingletonState
+from state import SingletonState
 
 app = Flask(__name__)
 
