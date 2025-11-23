@@ -1,22 +1,53 @@
 from flask import Flask, request, render_template, url_for, redirect
 import time
+from datetime import date
 
 app = Flask(__name__)
 
-# Simple in-memory app state. For production, persist this in a DB or cache.
+users = {
+    "default": {
+        "streak": 0,
+        "health_points": 0,
+        "last_completed_day": None
+    }
+}
+daily_habits = [
+    {"id": 1, "name": "Drink 1 Glass of Water"},
+    {"id": 2, "name": "Sleep 8 Hours"},
+    {"id": 3, "name": "Take a 5-Minute Walk"},
+    {"id": 4, "name": "Stretch for 2 Minutes"}
+]
+completed_habits = set()
+
+
 app_state = {
     "running": False,
     "start_time": None,
     "last_elapsed": None,
 }
-task_name = []
+
+running = False
+start_time = None
+last_elapsed = None
+
+tasks = []
+
+def start_task(name):
+    return None
+
+def on_start():
+    return None
+
+def on_stop():
+    return None
+
 
 @app.route("/home1")
 def home1():
     return render_template(
         "home1.html",
         running=app_state["running"],
-        last_elapsed=app_state.get("last_elapsed"),
+        last_elapsed=app_state["last_elapsed"]
     )
 
 
@@ -43,7 +74,7 @@ def start():
         start_task(task_name)
         on_start()
 
-    return redirect(url_for("x"))
+    return redirect(url_for("home2.html"))
 
 
 @app.route("/stop", methods=["POST"])
@@ -53,35 +84,47 @@ def stop():
     if running:
         running = False
         last_elapsed = time.time() - start_time
-        # trigger your stop function
         on_stop()
 
-    return redirect(url_for("simonsays"))
+    return redirect(url_for("stoppage.html"))
 
-with app.test_request_context():
-    print(url_for("static", filename="styles.css"))
-
-tasks = [] 
 
 @app.route("/taskinput")
 def task_input():
-    return render_template("task_input.html")
+    return render_template("home1.html")
 
 
 @app.route("/save_task", methods=["POST"])
 def save_task():
-    task = request.form.get("task")
+    # Server-side validation: strip whitespace and only save non-empty tasks
+    task_raw = request.form.get("task", "")
+    task = task_raw.strip()
     if task:
         tasks.append(task)
-    # redirect to the dashboard to show the updated list
+    # If the input was empty or whitespace only, ignore it and redirect.
     return redirect(url_for("dashboard"))
 
+@app.route("/complete_habit/<int:habit_id>", methods=["POST"])
+def complete_habit(habit_id):
+    user = "default"
+
+    if habit_id not in completed_habits:
+        completed_habits.add(habit_id)
+        users[user]["health_points"] += 5  # reward for completing habits
+
+    return redirect(url_for("dashboard"))
 
 @app.route("/dashboard")
 def dashboard():
-    return render_template("dashboard.html", tasks=tasks)
-
-
+    user = "default"
+    return render_template(
+        "dashboard.html",
+        tasks=tasks,
+        streak=users[user]["streak"],
+        health_points=users[user]["health_points"],
+        habits=daily_habits,
+        completed=completed_habits
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)
